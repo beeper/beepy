@@ -1,0 +1,60 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+	fragment@0 {
+		target = <&spi0>;
+		__overlay__ {
+			status = "okay";
+
+			spidev@0{
+				status = "disabled";
+			};
+
+			spidev@1{
+				status = "disabled";
+			};
+		};
+	};
+
+	fragment@1 {
+                target = <&spi0_pins>;
+                __overlay__ {
+                        brcm,pins = <0x0a 0x0b>; /* skipping bcm9 MISO */
+                };
+        };
+
+	fragment@2 {
+		target = <&gpio>;
+		__overlay__ {
+			sharp_pins: sharp_pins {
+				brcm,pins = <9 23>;
+				brcm,function = <1 1>; /* out */
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&spi0>;
+		__overlay__ {
+			/* needed to avoid dtc warning */
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			sharp: sharp@0{
+				compatible = "sharp";
+				reg = <0>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&sharp_pins>;
+				spi-cs-high = <1>;
+				spi-max-frequency = <2000000>;
+				buswidth = <8>;
+				debug = <0>;
+
+			};
+
+		};
+	};
+};
