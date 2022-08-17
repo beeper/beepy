@@ -98,6 +98,7 @@ First compile the kernel modules
 ```
 cd ~
 wget -O sharp-lcd.tar.gz https://github.com/billylindeman/Sharp-Memory-LCD-Kernel-Driver/archive/refs/heads/master.tar.gz 
+tar zxvf sharp-lcd.tar.gz
 cd Sharp-Memory-LCD-Kernel-Driver-master/
 make
 make modules_install
@@ -118,6 +119,7 @@ cp sharp.dtbo /boot/dtbs/5.10.69-12-amlogic-g98700611d064/amlogic/overlay
 ```
 cd ~
 wget -O bbq10kbd.tar.gz https://github.com/billylindeman/bbq10kbd-kernel-driver/archive/refs/heads/master.tar.gz 
+tar zxvf bbq10kbd.tar.gz
 cd bbq10kbd-kernel-driver/
 make modules modules_install
 depmod -A
