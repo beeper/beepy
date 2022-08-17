@@ -91,7 +91,7 @@ sudo apt install build-essential wget device-tree-compiler
 
 ##### Sharp LCD Driver 
 
-The main display is driven with this driver: https://github.com/kylehawes/Sharp-Memory-LCD-Kernel-Driver
+The main display is driven with this driver: https://github.com/billylindeman/Sharp-Memory-LCD-Kernel-Driver
 
 
 First compile the kernel modules
@@ -113,13 +113,50 @@ cp sharp.dtbo /boot/dtbs/5.10.69-12-amlogic-g98700611d064/amlogic/overlay
 ```
 
 
-Edit  `/boot/uEnv.txt` to support spidev and add the following configs for the sharp driver
+### Keyboard Driver
 
 ```
-overlays=meson-g12a-uart-ao-a-on-gpioao-0-gpioao-1 meson-g12a-spi-spidev sharp
+cd ~
+wget -O bbq10kbd.tar.gz https://github.com/billylindeman/bbq10kbd-kernel-driver/archive/refs/heads/master.tar.gz 
+cd bbq10kbd-kernel-driver/
+make modules modules_install
+depmod -A
+echo bbq10kbd >> /etc/modules
+```
+
+```
+dtc -@ -I dts -O dtb -o bbq10kbd-radxa-zero.dtbo dts/bbq10kbd-radxa-zero.dts 
+cp bbq10kbd-radxa-zero.dtbo /boot/dtbs/5.10.69-12-amlogic-g98700611d064/amlogic/overlay/
+```
+
+
+
+### Device tree configuration
+
+Edit  `/boot/uEnv.txt` to support spidev, i2c, sharp driver, and bbq10kbd driver
+
+```
+overlays=meson-g12a-uart-ao-a-on-gpioao-0-gpioao-1 meson-g12a-spi-spidev sharp meson-g12a-i2c-ee-m3-gpioa-14-gpioa-15 bbq10kbd-radxa-zero
 param_spidev_spi_bus=1
 param_spidev_max_freq=10000000
 extraargs=fbcon=map:0 fbcon=font:VGA8x8 framebuffer_width=400 framebuffer_height=240
 ```
 
-Now reboot and it should work!
+### Setup Console
+
+The default console charmap has some incorrect characters, so we can reconfigure it by running this as root
+```
+cat > /etc/default/console-setup << EOF
+
+# Consult the console-setup(5) manual page.
+ACTIVE_CONSOLES="/dev/tty[1-6]"
+CHARMAP="UTF-8"
+CODESET="Lat15"
+FONTFACE="Fixed"
+FONTSIZE="8x14"
+VIDEOMODE=
+
+EOF
+```
+
+Now reboot, and you should have a working device!
