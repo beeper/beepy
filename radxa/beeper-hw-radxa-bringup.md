@@ -1,50 +1,16 @@
 # BeeperHW Board Bringup
 ## Radxa
 
+### Flash ROM onto SD card
 
-## Install Ubuntu
-### Dependencies
-```
-brew install libusb python
-pip3 install pyamlboot
-```
+- Download https://github.com/radxa-build/radxa-zero/releases/download/20220801-0213/radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img.xz 
+- Use Etcher to flash image to SD card
+- Insert SD card into Radxa, connect USB C cable to jack on bottom of device
+- wait 1-2 minutes for first boot 
 
-### Erase MMC
-Hold the USB Boot button on the back of the Radxa and plug in the usb-c OTG cable to your computer
 
-```
-# First get this aml image 
-wget https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin
-# Flash it to fully erase the eMMC on the Radxa
-boot-g12.py ./radxa-zero-erase-emmc.bin
-```
-
-### Setup eMMC udisk storage
-
-```
-# Download the udisk-storage bootloader
-wget https://dl.radxa.com/zero/images/loader/rz-udisk-loader.bin
-# Flash bin to get a usb-class-storage access to eMMC
-boot-g12.py ./rz-udisk-loader.bin
-```
-
-Device should now show up as a usb class storage device.  On mac, this will pop up a dialog saying the disk is uninitialized.. Click Ignore
-
-More info can be found at: https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom
-
-### Flash Armbian image
-```
-# Download ubuntu server image from radxa's github
-wget https://github.com/radxa-build/radxa-zero/releases/download/20220801-0213/radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img.xz
-
-# Decompress image
-unxz radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img.xz
-
-# Flash using dd
-sudo dd if=radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img of=/dev/disk4 bs=1m
-```
-
-Once this completes, unplug and replug the device and wait for it to show up in adb
+## Setup Linux 
+Now wait wait for it to show up in adb. I had to unplug and plug it back in, then wait several minutes before it showed up. 
 
 ```
 ➜  beeperhw adb devices
@@ -53,13 +19,17 @@ List of devices attached
 ```
 
 
-
-## Setup Linux 
-
 The radxa ubuntu build contains adb support, so we can access the shell with:
 ```
 adb shell
 ```
+
+##### Enable Root login over SSH
+```
+sudo vi /etc/ssh/sshd_config
+```
+Find and change `PermitRootLogin yes`
+
 
 ##### Configure Wifi
 
@@ -123,3 +93,47 @@ extraargs=fbcon=map:0 fbcon=font:VGA8x8 framebuffer_width=400 framebuffer_height
 ```
 
 Now reboot and it should work!
+
+---- 
+
+## Instructions for Radxa Zero with EMMC
+### Dependencies
+```
+brew install libusb python
+pip3 install pyamlboot
+```
+
+### Erase MMC
+Hold the USB Boot button on the back of the Radxa and plug in the usb-c OTG cable to your computer
+
+```
+# First get this aml image 
+wget https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin
+# Flash it to fully erase the eMMC on the Radxa
+boot-g12.py ./radxa-zero-erase-emmc.bin
+```
+
+### Setup eMMC udisk storage
+
+```
+# Download the udisk-storage bootloader
+wget https://dl.radxa.com/zero/images/loader/rz-udisk-loader.bin
+# Flash bin to get a usb-class-storage access to eMMC
+boot-g12.py ./rz-udisk-loader.bin
+```
+
+Device should now show up as a usb class storage device.  On mac, this will pop up a dialog saying the disk is uninitialized.. Click Ignore
+
+More info can be found at: https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom
+
+### Flash Armbian image
+```
+# Download ubuntu server image from radxa's github
+wget https://github.com/radxa-build/radxa-zero/releases/download/20220801-0213/radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img.xz
+
+# Decompress image
+unxz radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img.xz
+
+# Flash using dd
+sudo dd if=radxa-zero-ubuntu-focal-server-arm64-20220801-0346-mbr.img of=/dev/disk4 bs=1m
+```
