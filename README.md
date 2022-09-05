@@ -13,7 +13,7 @@
 
 #### Configure Radxa
 1. `./adb devices` to confirm that the Radxa is there. Use the correct `adb` for your system, included in this repo.
-2. `adb shell`
+2. `./adb shell`
 3. `echo "PermitRootLogin yes" >> /etc/ssh/sshd_config`
 4. `passwd`
     1. enter new pw
@@ -22,11 +22,14 @@
     1. may need to try a few times until it connects
 7. `ip a | grep -A 2 'wlan0' | grep inet`
     1. will show you 2 IP addresses for some reason, pick one
-8. `reboot now` and wait for it to reboot
+8. `reboot now` and wait 15s for it to reboot
 9. `ssh root@<ip address from step above>`
-10. `wget https://raw.githubusercontent.com/beeper/beeper-beeper/main/setup.sh`
-11. `chmod +x setup.sh && ./setup.sh`
-12. After setup completes, move on to next step
+10. `apt update && apt install -y wget`
+11. `wget https://raw.githubusercontent.com/beeper/beeper-beeper/main/setup.sh`
+12. `chmod +x setup.sh && ./setup.sh`
+
+Setup should take 3-4 minutes.
+
 
 #### Connect Radxa to Beeper PCB
 1. unplug from computer
@@ -39,6 +42,12 @@
 7. `loadkeys bbq10kbd`
 
 *Make sure you double check the polarity of the battery connector before insert the battery!*
+
+- mic button is ctrl, alt is alt, and then sym for the character overlay
+
+- alt+speaker = tab
+
+- alt + h,j,k,l for up down left right but up/down doesn't seem to work in bash
 
 
 ## Other SBC
