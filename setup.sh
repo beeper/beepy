@@ -21,7 +21,7 @@ cp sharp.dtbo /boot/dtbs/5.10.69-12-amlogic-g98700611d064/amlogic/overlay
 cd ~
 git clone https://github.com/billylindeman/bbq10kbd-kernel-driver.git
 cd bbq10kbd-kernel-driver/
-make modules modules_install
+make modules modules_install keymap keymap_config
 depmod -A
 echo bbq10kbd >> /etc/modules
 dtc -@ -I dts -O dtb -o bbq10kbd-radxa-zero.dtbo dts/bbq10kbd-radxa-zero.dts
