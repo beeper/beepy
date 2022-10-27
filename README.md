@@ -49,6 +49,9 @@ Setup should take 3-4 minutes.
 
 - alt + h,j,k,l for up down left right but up/down doesn't seem to work in bash
 
+## RP2040 firmware
+- using version from https://github.com/solderparty/i2c_puppet
+
 
 ## Other SBC
 [Instructions for Raspberry Pi (outdated)](/raspberrypi/README.md)
