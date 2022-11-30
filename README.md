@@ -24,7 +24,7 @@
     1. will show you 2 IP addresses for some reason, pick one
 8. `reboot now` and wait 15s for it to reboot
 9. `ssh root@<ip address from step above>`
-10. `apt update && apt install -y wget`
+10. `apt install -y wget && export DISTRO=focal-stable && wget -O - apt.radxa.com/$DISTRO/public.key 5 | sudo apt-key add - && apt update`
 11. `wget https://raw.githubusercontent.com/beeper/beeper-beeper/main/setup.sh`
 12. `chmod +x setup.sh && ./setup.sh`
 
