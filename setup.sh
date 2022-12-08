@@ -19,7 +19,7 @@ cp sharp.dtbo /boot/dtbs/5.10.69-12-amlogic-g98700611d064/amlogic/overlay
 
 # install keyboard driver
 cd ~
-git clone https://github.com/billylindeman/bbq10kbd-kernel-driver.git
+git clone https://github.com/beeper/bbq10kbd-kernel-driver.git 
 cd bbq10kbd-kernel-driver/
 make modules modules_install keymap keymap_config
 depmod -A
