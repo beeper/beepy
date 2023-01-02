@@ -30,7 +30,8 @@
 		target = <&gpio>;
 		__overlay__ {
 			sharp_pins: sharp_pins {
-				brcm,pins = <9 23>;
+				brcm,pins = <23 22>;
+				/* brcm,pins = <9 23>; */ /* <- older revision */
 				brcm,function = <1 1>; /* out */
 			};
 		};
