@@ -35,4 +35,4 @@ The keyboard firmware was built using this [repo](https://github.com/solderparty
 Hold the "end call" button during power cycle to put the keyboard MCU into bootloader mode, it will now appear as a USB storage device and you can drag'n'drop the new firmware (\*.uf2) into the drive and it will reboot with the new firmware.
 
 ### Software
-You can read the key strokes from the keyboard over i2c using this [library](https://github.com/solderparty/arturo182_CircuitPython_BBQ10Keyboard). Running the modified test file [../bbq10keyboard_simpletest.py](bbq10keyboard_simpletest.py) will also cycle through the RGB LEDs.
+Follow the instructions here to install the keyboard driver https://github.com/wallComputer/bbqX0kbd_driver/
