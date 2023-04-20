@@ -10,8 +10,8 @@ raspi-config nonint do_spi 0 || { echo "Error: Failed to enable SPI."; exit 1; }
 raspi-config nonint do_boot_behaviour B2 || { echo "Error: Failed to enable Console Auto login."; exit 1; }
 
 echo "Updating and installing dependencies..."
-apt-get update || { echo "Error: Failed to update apt-get."; exit 1; }
-apt-get upgrade || { echo "Error: Failed to upgrade apt-get."; exit 1; }
+apt-get -y update || { echo "Error: Failed to update apt-get."; exit 1; }
+apt-get -y upgrade || { echo "Error: Failed to upgrade apt-get."; exit 1; }
 apt-get -y install git raspberrypi-kernel-headers < "/dev/null" || { echo "Error: Failed to install dependencies."; exit 1; }
 
 echo "Compiling and installing display driver..."
