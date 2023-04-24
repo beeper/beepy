@@ -20,7 +20,7 @@ echo 'sharp' | sudo tee -a /etc/modules
 dtc -@ -I dts -O dtb -o sharp.dtbo sharp.dts || { echo "Error: Failed to compile device tree."; exit 1; }
 sudo cp sharp.dtbo /boot/overlays
 echo -e "framebuffer_width=400\nframebuffer_height=240\ndtoverlay=sharp" | sudo tee -a /boot/config.txt
-sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x8/' /boot/cmdline.txt || { echo "Error: Failed to modify cmdline.txt."; exit 1; }
+sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { echo "Error: Failed to modify cmdline.txt."; exit 1; }
 
 echo "Compiling and installing keyboard device driver..."
 cd ~/
