@@ -1,9 +1,9 @@
 #!/bin/sh
 #This script reduces boot times from 60s to 19s on the RPi0w
 
-if [[ $(/usr/bin/id -u) -ne 0 ]]; then
-    echo "Not running as root"
-    exit
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" 
+    exit 1
 fi
 
 echo '
