@@ -17,12 +17,9 @@ boot_delay=0
 sed -i '1s/$/ loglevel=3 quiet logo.nologo consoleblank=0 fastboot/' /boot/cmdline.txt
 
 systemctl disable triggerhappy
-systemctl disable dhcpcd
 systemctl disable systemd-timesyncd
 systemctl disable polkit
 systemctl disable ModemManager
-systemctl disable wpa_supplicant
-systemctl disable networking
 systemctl disable avahi-daemon
 systemctl disable dphys-swapfile
 systemctl disable keyboard-setup
