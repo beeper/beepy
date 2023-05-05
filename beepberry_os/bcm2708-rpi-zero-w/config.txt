@@ -4,3 +4,8 @@ gpu_mem=16
 start_file=start_cd.elf
 fixup_file=fixup_cd.dat
 kernel=zImage
+
+initial_turbo=30
+disable_splash=1
+dtoverlay=disable-bt
+boot_delay=0
