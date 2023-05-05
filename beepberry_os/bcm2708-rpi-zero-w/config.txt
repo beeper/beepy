@@ -1,4 +1,4 @@
-# can probably remove this line
+# This is required for the cutdown firmware
 gpu_mem=16
 
 start_file=start_cd.elf
