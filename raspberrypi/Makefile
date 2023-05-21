@@ -44,7 +44,10 @@ download-dtb: ## Download the compatible Device Tree Blob (DTB)
 
 .PHONY: boot-qemu
 boot-qemu: ## Boot the image in QEMU
-	@qemu-system-arm -kernel $(KERNEL_NAME) -cpu arm1176 -m 256 -M versatilepb -dtb $(DTB_NAME) -serial stdio -append "root=/dev/sda2 panic=1 rootfstype=ext4 rw" -hda $(IMAGE_NAME).qcow2 -net nic -net user,hostfwd=tcp::5022-:22
+	@qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -device usb-kbd -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200 dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait" -drive "file=pi.img,format=raw,index=0,media=disk"
+	#@qemu-system-arm -M raspi0 -serial stdio -kernel kernel.img -dtb bcm2708-rpi-zero-w.dtb -append 'printk.time=0 earlycon=pl011,0x20201000 console=ttyAMA0'
+	#@qemu-system-arm -kernel kernel.img -M raspi0 -dtb bcm2708-rpi-zero.dtb -serial stdio -append "printk.time=0 earlycon=pl011,0x20201000 console=ttyAMA0" -hda $(IMAGE_NAME).qcow2
+	#@qemu-system-arm -kernel $(KERNEL_NAME) -cpu arm1176 -m 512 -M raspi0 -dtb $(DTB_NAME) -serial stdio -append "root=/dev/sda2 panic=1 rootfstype=ext4 rw init=/bin/bash" -hda $(IMAGE_NAME).qcow2 -net nic -net user,hostfwd=tcp::5022-:22
 
 
 .PHONY: run-playbook
