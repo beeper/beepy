@@ -4,14 +4,14 @@ SHELL := /bin/bash
 IMAGE_URL = https://downloads.raspberrypi.org/raspios_lite_armhf_latest
 IMAGE_NAME = raspios_lite_armhf
 IMAGE_EXT = .xz
-KERNEL_URL = https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/kernel-qemu-5.10.63-bullseye
-KERNEL_NAME = kernel-qemu
-DTB_URL = https://github.com/dhruvvyas90/qemu-rpi-kernel/raw/master/versatile-pb-bullseye-5.10.63.dtb
-DTB_NAME = versatile-pb.dtb
+KERNEL_URL = https://github.com/raspberrypi/firmware/raw/master/boot/kernel.img
+KERNEL_NAME = kernel.img
+DTB_URL = https://github.com/raspberrypi/firmware/raw/master/boot/bcm2708-rpi-zero-w.dtb
+DTB_NAME = bcm2708-rpi-zero-w.dtb
 PLAYBOOK = playbook.yml
 
 .PHONY: all
-all: check-dependencies download-image extract-image convert-image download-kernel download-dtb boot-qemu run-playbook ## Run all steps
+all: check-dependencies download-image extract-image rename-image resize-image download-kernel download-dtb boot-qemu run-playbook ## Run all steps
 
 .PHONY: check-dependencies
 check-dependencies: ## Check required dependencies
@@ -30,9 +30,13 @@ download-image: ## Download Raspberry Pi OS image
 extract-image: ## Extract the downloaded image
 	@xz -d -k -f $(IMAGE_NAME)$(IMAGE_EXT)
 
-.PHONY: convert-image
-convert-image: ## Convert the extracted image to QEMU format
-	@qemu-img convert -f raw -O qcow2 $(IMAGE_NAME).img $(IMAGE_NAME).qcow2
+.PHONY: rename-image
+rename-image: ## Rename the extracted image
+	@mv $(IMAGE_NAME) $(IMAGE_NAME).img
+
+.PHONY: resize-image
+resize-image: ## Resize the image
+	@qemu-img resize -f raw $(IMAGE_NAME).img 4096M
 
 .PHONY: download-kernel
 download-kernel: ## Download a compatible kernel for QEMU
@@ -44,11 +48,7 @@ download-dtb: ## Download the compatible Device Tree Blob (DTB)
 
 .PHONY: boot-qemu
 boot-qemu: ## Boot the image in QEMU
-	@qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -device usb-kbd -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200 dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait" -drive "file=pi.img,format=raw,index=0,media=disk"
-	#@qemu-system-arm -M raspi0 -serial stdio -kernel kernel.img -dtb bcm2708-rpi-zero-w.dtb -append 'printk.time=0 earlycon=pl011,0x20201000 console=ttyAMA0'
-	#@qemu-system-arm -kernel kernel.img -M raspi0 -dtb bcm2708-rpi-zero.dtb -serial stdio -append "printk.time=0 earlycon=pl011,0x20201000 console=ttyAMA0" -hda $(IMAGE_NAME).qcow2
-	#@qemu-system-arm -kernel $(KERNEL_NAME) -cpu arm1176 -m 512 -M raspi0 -dtb $(DTB_NAME) -serial stdio -append "root=/dev/sda2 panic=1 rootfstype=ext4 rw init=/bin/bash" -hda $(IMAGE_NAME).qcow2 -net nic -net user,hostfwd=tcp::5022-:22
-
+	@qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -netdev user,id=net0,hostfwd=tcp::5022-:22 -device usb-net,netdev=net0 -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200  dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait" -drive "file=$(IMAGE_NAME).img,format=raw,index=0,media=disk" --nographic
 
 .PHONY: run-playbook
 run-playbook: ## Run the Ansible playbook
