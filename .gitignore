@@ -5,3 +5,5 @@ raspberrypi/raspios_lite_armhf.img
 raspberrypi/raspios_lite_armhf.qcow2
 raspberrypi/raspios_lite_armhf.xz
 raspberrypi/versatile-pb.dtb
+raspberrypi/kernel.img
+raspberrypi/bcm2708-rpi-zero-w.dtb
