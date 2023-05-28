@@ -67,11 +67,14 @@ unmount-image: ## Unmount the Raspberry Pi OS image
 	fi
 	@sudo rmdir /mnt/rpi
 
+
 .PHONY: copy-scripts
 copy-scripts: mount-image ## Copy the setup and optimization scripts to the image
 	@echo "Copying setup and optimization scripts to the image..."
 	@sudo cp setup.sh /mnt/rpi/root/
 	@sudo cp optimize_boot.sh /mnt/rpi/root/
+	@echo "Attempting to enable SSH"
+	@sudo touch /mnt/rpi/boot/ssh
 	@echo '#!/bin/bash' | sudo tee /mnt/rpi/etc/init.d/boot-start.sh
 	@echo 'date +%s > /boot/start.txt' | sudo tee -a /mnt/rpi/etc/init.d/boot-start.sh
 	@echo '#!/bin/bash' | sudo tee /mnt/rpi/etc/init.d/boot-end.sh
@@ -81,8 +84,12 @@ copy-scripts: mount-image ## Copy the setup and optimization scripts to the imag
 	@if [ ! -L /mnt/rpi/etc/rcS.d/S01boot-start.sh ]; then \
 		sudo ln -s ../init.d/boot-start.sh /mnt/rpi/etc/rcS.d/S01boot-start.sh; \
 	fi
-	@if [ ! -L /mnt/rpi/etc/rcS.d/S99boot-end.sh ]; then \
-		sudo ln -s ../init.d/boot-end.sh /mnt/rpi/etc/rcS.d/S99boot-end.sh; \
+	@if [ ! -L /mnt/rpi/etc/rc6.d/S99boot-end.sh ]; then \
+		sudo ln -s ../init.d/boot-end.sh /mnt/rpi/etc/rc6.d/S99boot-end.sh; \
+	fi
+	@echo "Disabling Raspberry Pi OS setup wizard..."
+	@if [ -f /mnt/rpi/etc/xdg/autostart/piwiz.desktop ]; then \
+		sudo rm /mnt/rpi/etc/xdg/autostart/piwiz.desktop; \
 	fi
 	@make unmount-image
 
@@ -90,8 +97,7 @@ copy-scripts: mount-image ## Copy the setup and optimization scripts to the imag
 .PHONY: boot-qemu
 boot-qemu: copy-scripts ## Boot the image in QEMU
 	@echo "Booting Raspberry Pi OS in QEMU..."
-	# @qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -netdev user,id=net0,hostfwd=tcp::5022-:22 -device usb-net,netdev=net0 -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200  dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait" -drive "file=$(IMAGE_NAME).img,format=raw,index=0,media=disk" --nographic
-	@qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -netdev user,id=net0,hostfwd=tcp::5022-:22 -device usb-net,netdev=net0 -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200  dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait init=/etc/init.d/boot-start.sh" -drive "file=$(IMAGE_NAME).img,format=raw,index=0,media=disk" --nographic
+	@qemu-system-arm -machine raspi0 -kernel $(KERNEL_NAME) -dtb $(DTB_NAME) -netdev user,id=net0,hostfwd=tcp::5022-:22 -device usb-net,netdev=net0 -no-reboot -append "earlycon=pl011,0x20201000 console=ttyAMA0,115200  dwc_otg.fiq_fsm_enable=0 dwc_otg.fiq_enable=0 dwc_otg.nak_holdoff=0 root=/dev/mmcblk0p2 initcall_blacklist=bcm2835_pm_driver_init arm_boost=1 rootwait" -drive "file=$(IMAGE_NAME).img,format=raw,index=0,media=disk"
 
 .PHONY: run-playbook
 run-playbook: ## Run the Ansible playbook

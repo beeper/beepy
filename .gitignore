@@ -3,6 +3,7 @@ raspberrypi/kernel-qemu
 raspberrypi/raspios_lite_armhf
 raspberrypi/raspios_lite_armhf.img
 raspberrypi/raspios_lite_armhf.qcow2
+raspberrypi/raspios_lite_armhf.img.xz
 raspberrypi/raspios_lite_armhf.xz
 raspberrypi/versatile-pb.dtb
 raspberrypi/kernel.img
