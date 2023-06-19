@@ -13,7 +13,7 @@ echo "Compiling and installing display driver..."
 cd ~/
 if [ -d ~/Sharp-Memory-LCD-Kernel-Driver ]; then
   cd ~/Sharp-Memory-LCD-Kernel-Driver
-  git pull
+  git pull --ff-only
 else
   git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
   cd ~/Sharp-Memory-LCD-Kernel-Driver
@@ -31,7 +31,7 @@ echo "Compiling and installing keyboard device driver..."
 cd ~/
 if [ -d ~/bbqX0kbd_driver ]; then
   cd ~/bbqX0kbd_driver
-  git pull
+  git pull --ff-only
 else
   git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { echo "Error: Failed to clone keyboard driver repository."; exit 1; }
   cd ~/bbqX0kbd_driver
