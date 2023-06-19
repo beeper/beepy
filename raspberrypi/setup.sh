@@ -14,7 +14,7 @@ cd ~/
 if [-d ~/Sharp-Memory-LCD-Kernel-Driver]; then
   cd ~/Sharp-Memory-LCD-Kernel-Driver
   git pull
-else;
+else
   git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
   cd ~/Sharp-Memory-LCD-Kernel-Driver
 fi
