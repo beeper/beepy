@@ -11,7 +11,7 @@ sudo apt-get -y install git raspberrypi-kernel-headers < "/dev/null" || { echo "
 
 echo "Compiling and installing display driver..."
 cd ~/
-if [-d ~/Sharp-Memory-LCD-Kernel-Driver]; then
+if [ -d ~/Sharp-Memory-LCD-Kernel-Driver ]; then
   cd ~/Sharp-Memory-LCD-Kernel-Driver
   git pull
 else
@@ -29,7 +29,7 @@ sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { 
 
 echo "Compiling and installing keyboard device driver..."
 cd ~/
-if [-d ~/bbqX0kbd_driver]; then
+if [ -d ~/bbqX0kbd_driver ]; then
   cd ~/bbqX0kbd_driver
   git pull
 else
