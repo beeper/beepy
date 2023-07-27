@@ -2,6 +2,6 @@
 
 <img src="/img/beepberry-header.png" />
 
-### [Buy Now](https://shop.sqfmi.com/products/beepberry)
+### [Buy Now](https://forms.gle/Q3NCLSjDZwcURxrs8)
 
-Learn more at <a href="https://beepberry.sqfmi.com" target="_blank" rel="noopener noreferrer">https://beepberry.sqfmi.com</a>
+Learn more at <a href="https://beepy.sqfmi.com/" target="_blank" rel="noopener noreferrer">https://beepy.sqfmi.com/</a>
