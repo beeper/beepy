@@ -11,23 +11,23 @@ sudo apt-get -y install git raspberrypi-kernel-headers < "/dev/null" || { echo "
 
 echo "Compiling and installing display driver..."
 cd ~/
-git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
+git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { script_error "Error: Failed to clone display driver repository."; }
 cd ~/Sharp-Memory-LCD-Kernel-Driver
 
-make || { echo "Error: Failed to compile display driver."; exit 1; }
-sudo make modules_install || { echo "Error: Failed to install display driver."; exit 1; }
+make || { script_error "Error: Failed to compile display driver."; }
+sudo make modules_install || { script_error "Error: Failed to install display driver."; }
 sudo depmod -A || { echo "Error: Failed to update module dependencies."; exit 1; }
 echo 'sharp' | sudo tee -a /etc/modules
-dtc -@ -I dts -O dtb -o sharp.dtbo sharp.dts || { echo "Error: Failed to compile device tree."; exit 1; }
+dtc -@ -I dts -O dtb -o sharp.dtbo sharp.dts || { script_error "Error: Failed to compile device tree."; }
 sudo cp sharp.dtbo /boot/overlays
 echo -e "framebuffer_width=400\nframebuffer_height=240\ndtoverlay=sharp" | sudo tee -a /boot/config.txt
-sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { echo "Error: Failed to modify cmdline.txt."; exit 1; }
+sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { script_error "Error: Failed to modify cmdline.txt."; }
 
 echo "Compiling and installing keyboard device driver..."
 cd ~/
-git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { echo "Error: Failed to clone keyboard driver repository."; exit 1; }
+git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { script_error "Error: Failed to clone keyboard driver repository."; }
 cd ~/bbqX0kbd_driver
-./installer.sh --BBQ20KBD_TRACKPAD_USE BBQ20KBD_TRACKPAD_AS_KEYS --BBQX0KBD_INT BBQX0KBD_USE_INT || { echo "Error: Failed to install keyboard device driver."; exit 1; }
+./installer.sh --BBQ20KBD_TRACKPAD_USE BBQ20KBD_TRACKPAD_AS_KEYS --BBQX0KBD_INT BBQX0KBD_USE_INT || { script_error "Error: Failed to install keyboard device driver.";}
 
 echo "Cleaning up files..."
 cd ~/
@@ -36,3 +36,16 @@ rm -rf ~/Sharp-Memory-LCD-Kernel-Driver
 
 echo "Rebooting..."
 sudo shutdown -r now || { echo "Error: Failed to reboot."; exit 1; }
+
+function cleanup () {
+  echo "Cleaning up files..."
+  cd ~/
+  rm -rf ~/bbqX0kbd_driver
+  rm -rf ~/Sharp-Memory-LCD-Kernel-Driver
+}
+
+function script_error () {
+  echo "$1"
+  cleanup
+  exit 1;
+}
