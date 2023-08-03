@@ -22,6 +22,9 @@ sudo cp sharp.dtbo /boot/overlays
 echo -e "framebuffer_width=400\nframebuffer_height=240\ndtoverlay=sharp" | sudo tee -a /boot/config.txt
 sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { echo "Error: Failed to modify cmdline.txt."; exit 1; }
 
+echo "Setting terminal to monochrome..."
+echo 'export TERM=xterm-mono' >> ~/.profile || { echo "Error: Failed to set TERM to xterm-mono"; exit 1; }
+
 echo "Compiling and installing keyboard device driver..."
 cd ~/
 git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { echo "Error: Failed to clone keyboard driver repository."; exit 1; }
