@@ -11,13 +11,9 @@ sudo apt-get -y install git raspberrypi-kernel-headers < "/dev/null" || { echo "
 
 echo "Compiling and installing display driver..."
 cd ~/
-if [ -d ~/Sharp-Memory-LCD-Kernel-Driver ]; then
-  cd ~/Sharp-Memory-LCD-Kernel-Driver
-  git pull --ff-only
-else
-  git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
-  cd ~/Sharp-Memory-LCD-Kernel-Driver
-fi
+git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
+cd ~/Sharp-Memory-LCD-Kernel-Driver
+
 make || { echo "Error: Failed to compile display driver."; exit 1; }
 sudo make modules_install || { echo "Error: Failed to install display driver."; exit 1; }
 sudo depmod -A || { echo "Error: Failed to update module dependencies."; exit 1; }
@@ -29,14 +25,14 @@ sudo sed -i ' 1 s/.*/& fbcon=map:10 fbcon=font:VGA8x16/' /boot/cmdline.txt || { 
 
 echo "Compiling and installing keyboard device driver..."
 cd ~/
-if [ -d ~/bbqX0kbd_driver ]; then
-  cd ~/bbqX0kbd_driver
-  git pull --ff-only
-else
-  git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { echo "Error: Failed to clone keyboard driver repository."; exit 1; }
-  cd ~/bbqX0kbd_driver
-fi
+git clone https://github.com/sqfmi/bbqX0kbd_driver.git || { echo "Error: Failed to clone keyboard driver repository."; exit 1; }
+cd ~/bbqX0kbd_driver
 ./installer.sh --BBQ20KBD_TRACKPAD_USE BBQ20KBD_TRACKPAD_AS_KEYS --BBQX0KBD_INT BBQX0KBD_USE_INT || { echo "Error: Failed to install keyboard device driver."; exit 1; }
+
+echo "Cleaning up files..."
+cd ~/
+rm -rf ~/bbqX0kbd_driver
+rm -rf ~/Sharp-Memory-LCD-Kernel-Driver
 
 echo "Rebooting..."
 sudo shutdown -r now || { echo "Error: Failed to reboot."; exit 1; }
