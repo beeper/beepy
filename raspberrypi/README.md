@@ -14,7 +14,7 @@ sudo shutdown -r now
 
 3. Run the setup script
 ```
-curl -s https://raw.githubusercontent.com/beeper/beepberry/main/raspberrypi/setup.sh | bash
+curl -s https://raw.githubusercontent.com/beeper/beepy/main/raspberrypi/setup.sh | bash
 ```
 
 ## Details

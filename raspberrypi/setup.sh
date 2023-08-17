@@ -11,7 +11,7 @@ sudo apt-get -y install git raspberrypi-kernel-headers < "/dev/null" || { echo "
 
 echo "Compiling and installing display driver..."
 cd ~/
-git clone https://github.com/w4ilun/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
+git clone https://github.com/sqfmi/Sharp-Memory-LCD-Kernel-Driver.git || { echo "Error: Failed to clone display driver repository."; exit 1; }
 cd ~/Sharp-Memory-LCD-Kernel-Driver
 make || { echo "Error: Failed to compile display driver."; exit 1; }
 sudo make modules_install || { echo "Error: Failed to install display driver."; exit 1; }
