@@ -29,5 +29,10 @@ cd ~/bbqX0kbd_driver
 make || { echo "Error: Failed to compile display driver."; exit 1; }
 sudo make install || { echo "Error: Failed to install display driver."; exit 1; }
 
+echo "Load keymap on start up..."
+sudo chmod +x ./init/S01beepykbd
+sudo mv ./init/S01beepykbd /etc/init.d/
+sudo update-rc.d S01beepykbd defaults
+
 echo "Rebooting..."
 sudo shutdown -r now || { echo "Error: Failed to reboot."; exit 1; }
