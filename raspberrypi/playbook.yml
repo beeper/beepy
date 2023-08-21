@@ -1,0 +1,15 @@
+- hosts: raspi
+  gather_facts: no
+  vars:
+    ansible_user: pi
+    ansible_password: raspberry
+    ansible_port: 5022
+    ansible_host: localhost
+    ansible_become: yes
+    ansible_become_method: sudo
+  tasks:
+    - name: Update and install raspberrypi-kernel
+      apt:
+        update_cache: yes
+        pkg:
+          - raspberrypi-kernel
