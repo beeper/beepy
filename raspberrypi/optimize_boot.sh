@@ -11,6 +11,7 @@ echo '
 initial_turbo=30
 disable_splash=1
 dtoverlay=disable-bt
+dtoverlay=sdtweak,overclock_50=100
 boot_delay=0
 ' >> /boot/config.txt
 
