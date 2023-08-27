@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# note: this currently only works for key=value cmdline args
 modify_cmdline() {
   if echo "${1}" | grep -q '='; then
     modify_cmdline_key=$(echo "${1}" | cut -d'=' -f1)
