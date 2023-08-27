@@ -1,8 +1,21 @@
 #!/bin/sh
 
-local_motd_sha256=$(sha256sum /etc/motd | awk '{print $1}')
-default_motd_sha256="a378977155fb42bb006496321cbe31f74cbda803c3f6ca590f30e76d1afad921"
+sudo_user=${SUDO_USER:-$(whoami)}
+sudo_user_home=$(eval echo ~$sudo_user)
+touch "$sudo_user_home/.hushlogin"
 
-if [ "$local_motd_sha256" = "$default_motd_sha256" ]; then
-  mv /etc/motd /etc/motd.backup.$(date +%s)
+# Check for 10-uname
+if [ -e "/etc/update-motd.d/10-uname" ]; then
+  chmod -x /etc/update-motd.d/10-uname*
+  mv -f /etc/update-motd.d/10-uname /etc/update-motd.d/10-uname.backup.$(date +%s)
+fi
+
+# Check for motd
+if [ -e "/etc/motd" ]; then
+  mv -f /etc/motd /etc/motd.backup.$(date +%s)
+fi
+
+# Check for issue
+if [ -e "/etc/issue" ]; then
+  mv -f /etc/issue /etc/issue.backup.$(date +%s)
 fi
