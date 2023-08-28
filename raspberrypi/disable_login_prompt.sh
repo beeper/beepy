@@ -19,15 +19,16 @@ modify_service_conf() {
   while IFS= read -r modify_service_conf_line || [ -n "$modify_service_conf_line" ]; do
     if echo "${modify_service_conf_line}" | grep -q -e "^${modify_service_conf_linePrefix}"; then
       modify_service_conf_found=1
+      remaining_line=$(echo "${modify_service_conf_line#${#modify_service_conf_linePrefix}}" | awk '{$1=$1};1')
       case "${modify_service_conf_subcommand}" in
         add)
-          if ! echo "${modify_service_conf_line}" | grep -q -e "\\b${modify_service_conf_flag_escaped}\\b"; then
-            remaining_line=$(echo "${modify_service_conf_line#${#modify_service_conf_linePrefix}}" | awk '{$1=$1};1')
+          if ! echo "${remaining_line}" | grep -q -e "\\b${modify_service_conf_flag_escaped}\\b"; then
             modify_service_conf_line="${modify_service_conf_linePrefix} ${modify_service_conf_flag} ${remaining_line}"
           fi
           ;;
         del|delete)
-          modify_service_conf_line=$(echo "${modify_service_conf_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g")
+          remaining_line=$(echo "${remaining_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g")
+          modify_service_conf_line="${modify_service_conf_linePrefix} ${remaining_line}"
           ;;
       esac
     fi
