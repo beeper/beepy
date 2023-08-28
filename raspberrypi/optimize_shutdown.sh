@@ -28,7 +28,7 @@ modify_conf() {
 
   modify_conf_new_content=$(printf "%s" "${modify_conf_new_content}" | sed -e :a -e '/^\n*$/{$d;N;};/\n$/ba')
 
-  printf "%s" "${modify_conf_new_content}" > "${modify_conf_conf_file}"
+  printf "%s\n" "${modify_conf_new_content}" > "${modify_conf_conf_file}"
 }
 
 modify_conf "/etc/sysctl.d/20-quiet-printk.conf" "kernel.printk" "-1 -1 -1 -1"
