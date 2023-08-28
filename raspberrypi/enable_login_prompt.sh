@@ -6,6 +6,9 @@ modify_service_conf() {
   modify_service_conf_subcommand="$3"
   modify_service_conf_flag="$4"
 
+  # Escape characters that have special meaning in regular expressions
+  modify_service_conf_flag_escaped=$(echo "${modify_service_conf_flag}" | sed -e 's/[]\/$*.^|[]/\\&/g')
+
   if [ ! -f "${modify_service_conf_file}" ]; then
     exit 1
   fi
@@ -18,12 +21,12 @@ modify_service_conf() {
       modify_service_conf_found=1
       case "${modify_service_conf_subcommand}" in
         add)
-          if ! echo "${modify_service_conf_line}" | grep -q "${modify_service_conf_flag}"; then
+          if ! echo "${modify_service_conf_line}" | grep -q "\\b${modify_service_conf_flag_escaped}\\b"; then
             modify_service_conf_line="${modify_service_conf_line} ${modify_service_conf_flag}"
           fi
           ;;
-        del)
-          modify_service_conf_line=$(echo "${modify_service_conf_line}" | sed "s/\b${modify_service_conf_flag}\b//g")
+        del|delete)
+          modify_service_conf_line=$(echo "${modify_service_conf_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g")
           ;;
         *)
           ;;
@@ -40,5 +43,5 @@ modify_service_conf() {
   printf "%s\n" "${modify_service_conf_new_content}" > "${modify_service_conf_file}"
 }
 
-modify_service_conf "/etc/systemd/system/getty@tty1.service.d/autologin.conf" "ExecStart=-/sbin/agetty" "add" "--skip-login"
-modify_service_conf "/etc/systemd/system/getty@tty1.service.d/autologin.conf" "ExecStart=-/sbin/agetty" "add" "--nonewline"
+modify_service_conf "/etc/systemd/system/getty@tty1.service.d/autologin.conf" "ExecStart=-/sbin/agetty" "del" "--skip-login"
+modify_service_conf "/etc/systemd/system/getty@tty1.service.d/autologin.conf" "ExecStart=-/sbin/agetty" "del" "--nonewline"
