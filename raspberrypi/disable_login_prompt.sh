@@ -25,7 +25,7 @@ modify_service_conf() {
           fi
           ;;
         del|delete)
-          remaining_line=$(echo "${remaining_line}" | sed "s/\s*${modify_service_conf_flag_escaped}\s*/ /g")
+          remaining_line=$(echo "${remaining_line}" | sed "s/[[:space:]]*${modify_service_conf_flag_escaped}[[:space:]]*/ /g" | awk '{$1=$1};1')
           modify_service_conf_line="${modify_service_conf_linePrefix} ${remaining_line}"
           ;;
       esac
