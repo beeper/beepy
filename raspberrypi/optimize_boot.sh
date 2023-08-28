@@ -22,6 +22,5 @@ systemctl disable polkit
 systemctl disable ModemManager
 systemctl disable avahi-daemon
 systemctl disable dphys-swapfile
-systemctl disable keyboard-setup
 systemctl disable apt-daily
 systemctl disable raspi-config
