@@ -35,7 +35,7 @@ modify_service_conf() {
           ;;
       esac
     fi
-    modify_service_conf_new_content=$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")
+    modify_service_conf_new_content="$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")"
   done < "${modify_service_conf_file}"
 
   if [ "${modify_service_conf_found}" -eq 0 ]; then

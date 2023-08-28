@@ -6,8 +6,8 @@ modify_service_conf() {
   modify_service_conf_subcommand="$3"
   modify_service_conf_flag="$4"
 
-  modify_service_conf_flag_escaped=$(echo "${modify_service_conf_flag}" | sed -e 's/[\\/&]/\\&/g')
-  modify_service_conf_linePrefix_escaped=$(echo "${modify_service_conf_linePrefix}" | sed -e 's/[\\/&]/\\&/g')
+  modify_service_conf_flag_escaped="$(echo "${modify_service_conf_flag}" | sed -e 's/[\\/&]/\\&/g')"
+  modify_service_conf_linePrefix_escaped="$(echo "${modify_service_conf_linePrefix}" | sed -e 's/[\\/&]/\\&/g')"
 
   if [ ! -f "${modify_service_conf_file}" ]; then
     exit 1
@@ -28,14 +28,14 @@ modify_service_conf() {
           fi
           ;;
         del|delete)
-          remaining_line=$(echo "${remaining_line}" | sed "s/[[:space:]]*${modify_service_conf_flag_escaped}[[:space:]]*/ /g" | awk '{$1=$1};1')
+          remaining_line="$(echo "${remaining_line}" | sed "s/[[:space:]]*${modify_service_conf_flag_escaped}[[:space:]]*/ /g" | awk '{$1=$1};1')"
           modify_service_conf_line="${modify_service_conf_linePrefix} ${remaining_line}"
           ;;
         *)
           ;;
       esac
     fi
-    modify_service_conf_new_content=$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")
+    modify_service_conf_new_content="$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")"
   done < "${modify_service_conf_file}"
 
   if [ "${modify_service_conf_found}" -eq 0 ]; then
