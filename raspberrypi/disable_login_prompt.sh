@@ -27,12 +27,12 @@ modify_service_conf() {
           fi
           ;;
         del|delete)
-          remaining_line=$(echo "${remaining_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g")
+          remaining_line=$(echo "${remaining_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g" | awk '{$1=$1};1')
           modify_service_conf_line="${modify_service_conf_linePrefix} ${remaining_line}"
           ;;
       esac
     fi
-    modify_service_conf_new_content=$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")
+    modify_service_conf_new_content=$(printf "%s\n" "${modify_service_conf_new_content}${modify_service_conf_line}")
   done < "${modify_service_conf_file}"
 
   if [ "${modify_service_conf_found}" -eq 0 ]; then
