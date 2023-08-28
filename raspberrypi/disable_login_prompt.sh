@@ -1,5 +1,3 @@
-#!/bin/sh
-
 modify_service_conf() {
   modify_service_conf_file="$1"
   modify_service_conf_linePrefix="$2"
@@ -28,8 +26,8 @@ modify_service_conf() {
           fi
           ;;
         del|delete)
-          remaining_line=$(echo "${remaining_line}" | sed "s/\\b${modify_service_conf_flag_escaped}\\b//g" | awk '{$1=$1};1')
-          modify_service_conf_line="${modify_service_conf_linePrefix}${remaining_line}"
+          remaining_line=$(echo "${remaining_line}" | sed -E "s/\b${modify_service_conf_flag_escaped}\b//g" | awk '{$1=$1};1')
+          modify_service_conf_line="${modify_service_conf_linePrefix} ${remaining_line}"
           ;;
       esac
     fi
