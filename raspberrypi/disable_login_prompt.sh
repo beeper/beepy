@@ -35,14 +35,14 @@ modify_service_conf() {
           ;;
       esac
     fi
-    modify_service_conf_new_content=$(printf "%s\n" "${modify_service_conf_new_content}${modify_service_conf_line}")
+    modify_service_conf_new_content=$(printf "%s\n%s" "${modify_service_conf_new_content}" "${modify_service_conf_line}")
   done < "${modify_service_conf_file}"
 
   if [ "${modify_service_conf_found}" -eq 0 ]; then
     exit 1
   fi
 
-  printf "%s" "${modify_service_conf_new_content}" > "${modify_service_conf_file}"
+  printf "%s\n" "${modify_service_conf_new_content}" > "${modify_service_conf_file}"
 }
 
 modify_service_conf "/etc/systemd/system/getty@tty1.service.d/autologin.conf" "ExecStart=-/sbin/agetty" "add" "--skip-login"
