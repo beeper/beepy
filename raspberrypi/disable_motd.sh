@@ -1,15 +1,14 @@
 #!/bin/sh
 
-sudo_user=${SUDO_USER:-$(whoami)}
-sudo_user_home=$(eval echo "~${sudo_user}")
-
-touch "${sudo_user_home}/.hushlogin"
-
 DATE="$(date +%s)"
 
 if [ -z "${DATE}" ]; then
   DATE=default
 fi
+
+getent passwd |
+    awk -F: '($3 >= 1000 || $3 == 0) && $7 !~ /nologin|false$/ { print $6 "/.hushlogin" }' |
+    xargs -I {} sh -c "echo '${DATE}' | tee -a {} > /dev/null"
 
 if [ -e "/etc/update-motd.d/10-uname" ]; then
   chmod -x /etc/update-motd.d/10-uname*
