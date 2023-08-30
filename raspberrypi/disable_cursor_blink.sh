@@ -1,8 +1,8 @@
 #!/bin/sh
 
-cat <<EOL > "/etc/systemd/system/stop-cursor-blink.service"
+cat <<EOL > "/etc/systemd/system/disable-cursor-blink.service"
 [Unit]
-Description=Stop cursor blink on Linux console
+Description=Disable cursor blink on Linux console
 DefaultDependencies=no
 Before=sysinit.target
 
@@ -15,5 +15,5 @@ WantedBy=sysinit.target
 EOL
 
 systemctl daemon-reload
-systemctl enable stop-cursor-blink.service
-systemctl start stop-cursor-blink.service
+systemctl enable disable-cursor-blink.service
+systemctl start disable-cursor-blink.service
